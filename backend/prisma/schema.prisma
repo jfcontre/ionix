@@ -1,0 +1,47 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  ADMIN
+  EXECUTOR
+}
+
+enum StatusUser {
+  ACTIVE
+  INACTIVE
+}
+
+model Users {
+  id       Int        @id @default(autoincrement())
+  username String     @unique @db.VarChar(85)
+  password String     @db.VarChar(100)
+  email    String     @unique @db.VarChar(85)
+  role     Role
+  status   StatusUser @default(ACTIVE)
+  Todos    Todos[]
+}
+
+enum StatusTodo {
+  ASSIGNED
+  INITIATED
+  FINISHED_SUCCESS
+  FINISHED_ERROR
+  ON_HOLD
+}
+
+model Todos {
+  id          Int        @id @default(autoincrement())
+  title       String
+  description String
+  comment     String?
+  dueDate     DateTime
+  status      StatusTodo
+  executorId  Int
+  executor    Users      @relation(fields: [executorId], references: [id])
+}

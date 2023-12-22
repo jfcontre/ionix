@@ -1,0 +1,33 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    container_name: db_todo
+    environment:
+      - DATABASE_HOST=127.0.0.1
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+      - POSTGRES_DB=${DB_NAME}
+    restart: unless-stopped
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_todo:/var/lib/postgresql/data
+  api_todo:
+      depends_on:
+      - db
+      build: 
+        context: .
+        dockerfile: Dockerfile
+      image: apitodo-docker
+      container_name: apitodo
+      restart: always 
+      environment:
+        - DATABASE_URL=${DATABASE_URL}
+        - DB_HOST=${DB_HOST}
+        - DB_PORT=${DB_PORT}
+        
+      ports:
+      - "${APP_PORT}:${APP_PORT}"
+volumes:
+  db_todo:
