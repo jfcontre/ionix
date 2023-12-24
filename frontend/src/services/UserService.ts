@@ -10,8 +10,8 @@ class _UserService {
    * Allows to get all users executors
    * @returns 
    */
-  async getUsersExecutors():Promise<User[]> {
-    const res = await apiFetch<User[]>('GET',`${baseUrl}/users/getExecutors`)
+  async getUsersExecutors(): Promise<User[]> {
+    const res = await apiFetch<User[]>('GET', `${baseUrl}/users/getExecutors`)
     return res
   }
 }

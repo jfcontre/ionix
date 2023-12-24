@@ -1,7 +1,6 @@
 import { createSlice } from '@reduxjs/toolkit';
 import { type Todo } from '@/models/Todo';
 import { User } from '@/models/User';
-import { StatusTodo } from '@/constants/enums/todoStates';
 
 export interface TodoState {
   todos: Todo[]
@@ -33,10 +32,10 @@ export const todoSlice = createSlice({
     addListTodos: (state, { payload }) => {
       state.todos = [...payload]
     },
-    initializeTodo: (state, { payload }) => {
+    updateStatusTodo: (state, { payload }) => {
       state.todos = state.todos.map(todo => {
         if (todo.id === payload.id) {
-          return { ...todo, status:StatusTodo.INITIATED  };
+          return { ...todo, status: payload.status };
         }
         return todo;
       });
@@ -62,5 +61,5 @@ export const {
   addListExecutors,
   setSelectedTodo,
   updateTodo,
-  initializeTodo
+  updateStatusTodo 
 } = todoSlice.actions;

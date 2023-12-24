@@ -6,6 +6,8 @@ import { JwtPayload } from '../interfaces/jwt-payload.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ServiceResult } from '../../common/ServiceResult';
 import { JwtResponseDto } from '../dto/jw-response.dto';
+import { UserWithOutPassword } from '../interfaces/user-without-password.interface';
+import { ResetPasswordDto } from '../dto/reset-password.dto';
 
 
 @Injectable()
@@ -45,5 +47,29 @@ export class AuthService {
       result.message = "Credentials are incorrect"
       return result
     }
+  }
+
+  /**
+  * Reset password for a user
+  * @param resetPasswordDto The reset password information
+  * @param user The user logged 
+  * @returns a result indicating success or failure
+  */
+  async resetPassword(resetPasswordDto: ResetPasswordDto, user: UserWithOutPassword): Promise<ServiceResult<void>> {
+    const result = new ServiceResult<void>();
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(resetPasswordDto.password, salt);
+
+    await this.prisma.users.update({
+      where: { username: user.username },
+      data: { password: hashedPassword },
+    });
+
+    result.status = true;
+    result.message = "Password reset successfully";
+
+
+    return result;
   }
 }

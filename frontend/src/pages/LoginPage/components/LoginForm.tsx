@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Controller, useForm } from "react-hook-form";
 import { useAuthStore } from "@/hooks/useAuthStore";
-import { LoginFormInput } from "@/models/Login";
+import { LoginFormInput } from "@/models/Auth";
 import { ValidationRules } from "@/models/Form";
 import { passwordValidation, usernameValidation } from "./validations";
 

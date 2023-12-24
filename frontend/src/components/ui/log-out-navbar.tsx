@@ -9,9 +9,11 @@ import {
 import { Avatar, AvatarFallback } from "../ui/avatar"
 import { Separator } from "@/components/ui/separator";
 import { useAuthStore } from "@/hooks/useAuthStore"
+import { useNavigate } from "react-router-dom";
 
 export function LogOutNavBar() {
   const { logout, user } = useAuthStore();
+  const navigate = useNavigate()
 
   return (
     <DropdownMenu>
@@ -32,10 +34,16 @@ export function LogOutNavBar() {
         </DropdownMenuItem>
 
         <Separator />
+        <DropdownMenuLabel>Configuration</DropdownMenuLabel>
+        <DropdownMenuItem onClick={()=>navigate('/reset-password')} >
+          Reset Password
+        </DropdownMenuItem>
+
+        <Separator />
         <DropdownMenuItem onClick={() => { logout() }}>
           <LogOut className="pr-3" /> Log Out
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
   );
-};
+}

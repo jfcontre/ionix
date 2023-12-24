@@ -1,4 +1,4 @@
-import { StatusTodo } from "@/constants/enums/todoStates"
+import { StatusTodo } from "@/constants/enums/todoStatus"
 import { User } from "./User"
 
 export interface Todo {
@@ -18,4 +18,8 @@ export interface CreateTodoFormInput {
   description: string
   dueDate: string | Date
   executorId: number
+}
+
+export interface LeaveCommentTodoFormInput {
+  comment: string
 }

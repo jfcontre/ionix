@@ -8,6 +8,8 @@ import { GetUser } from '../../auth/decorators/get-user.decorator';
 import { UserWithOutPassword } from 'src/auth/interfaces/user-without-password.interface';
 import { Auth } from '../../auth/decorators/auth.decorator';
 import { AuthRole } from '../../auth/enums/auth-role.enum';
+import { UpdateStatusTodoDto } from '../dto/update-status-todo.dto';
+import { LeaveCommentTodoDto } from '../dto/leave-comment-todo.dto';
 
 @ApiTags('Todos')
 @Controller('todos')
@@ -89,6 +91,25 @@ export class TodosController {
   }
 
   /**
+  * Allows to update status todo
+  * @returns A todo updated
+  **/
+  @Put('updateStatusTodo/:id')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Allows to update status todo' })
+  async updateStatusTodo(
+    @Param('id') id: string,
+    @Body() updateTodoDto: UpdateStatusTodoDto,
+    @GetUser() user: UserWithOutPassword
+  ) {
+    const result = await this.todosService.updateTodoStatus(+id, updateTodoDto, user);
+    if (!result.status) {
+      throw new HttpException(result.message, result.code)
+    }
+    return result.data
+  }
+
+  /**
     * Allows to delete a todo
     * @returns A todo deleted
   **/
@@ -102,5 +123,24 @@ export class TodosController {
     const { status, ...resultWithoutStatus } = result;
 
     return resultWithoutStatus;
+  }
+
+  /**
+* Allows to leave a comment in todo
+* @returns A todo updated
+**/
+  @Put('leaveComment/:id')
+  @UsePipes(ValidationPipe)
+  @ApiOperation({ summary: 'Allows to leave comment in todo' })
+  async leaveCommentTodo(
+    @Param('id') id: string,
+    @Body() updateTodoDto: LeaveCommentTodoDto,
+    @GetUser() user: UserWithOutPassword
+  ) {
+    const result = await this.todosService.leaveComment(+id, updateTodoDto, user);
+    if (!result.status) {
+      throw new HttpException(result.message, result.code)
+    }
+    return result.data
   }
 }

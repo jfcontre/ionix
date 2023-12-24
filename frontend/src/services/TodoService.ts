@@ -1,4 +1,5 @@
-import { CreateTodoFormInput, Todo } from "../models/Todo";
+import { StatusTodo } from "@/constants/enums/todoStatus";
+import { CreateTodoFormInput, LeaveCommentTodoFormInput, Todo } from "../models/Todo";
 import { apiFetch } from "../utils/fetch";
 import { endpointsApi } from "@/constants/endpoints";
 
@@ -38,7 +39,19 @@ class _TodoService {
 * @returns  A todo started
 */
   async startTodo(id: number): Promise<Todo> {
-    const res = await apiFetch<Todo>('PUT', `${endpointsApi.todo.base}/startTodo/${id}`)
+    const res = await apiFetch<Todo>('PUT', `${endpointsApi.todo.startTodo}/${id}`)
+    return res
+  }
+
+  /**
+* Allows to update status  todo
+* @returns  A todo updated 
+*/
+  async updateStatusTodo(id: number, status: StatusTodo): Promise<Todo> {
+    const data = {
+      status
+    }
+    const res = await apiFetch<Todo>('PUT', `${endpointsApi.todo.changeStatus}/${id}`, data)
     return res
   }
 
@@ -48,6 +61,15 @@ class _TodoService {
  */
   async deleteTodo(id: number): Promise<Todo> {
     const res = await apiFetch<Todo>('DELETE', `${endpointsApi.todo.base}/${id}`)
+    return res
+  }
+
+  /**
+  * Allows to leave comment
+  * @returns  A todo deleted
+  */
+  async leaveComment(id:number,data:LeaveCommentTodoFormInput): Promise<Todo> {
+    const res = await apiFetch<Todo>('PUT', `${endpointsApi.todo.leaveComment}/${id}`,data)
     return res
   }
 }

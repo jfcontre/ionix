@@ -11,13 +11,14 @@ import { AuthStateEnum } from '@/constants/enums/authStates';
 import { getDataLocalStorage, persistDataLocalStorage } from '@/utils/localStorage';
 import { NotificationService } from '@/services/NotificationService';
 import { jwtDecode } from "jwt-decode";
-import { LoginFormInput } from '@/models/Login';
+import { LoginFormInput, ResetPasswordInput } from '@/models/Auth';
 
 interface _useAuthStore {
   status: AuthStateEnum;
   modalUnauthorizedStatus: boolean;
   user: User | null;
   login: (data: LoginFormInput) => Promise<boolean>;
+  resetPassword: (data: ResetPasswordInput) => Promise<void>
   logout: () => void;
   checkCredentials: () => Promise<boolean>;
 }
@@ -51,6 +52,20 @@ export const useAuthStore = (): _useAuthStore => {
     dispatch(onLogout());
     return false;
   };
+
+  const resetPassword = async (data: ResetPasswordInput) => {
+    try {
+      await AuthService.resetPassword(data)
+      NotificationService.success("Password reset successfully")
+    } catch (error) {
+      if (error instanceof Error) {
+        NotificationService.error(error.message)
+      } else {
+        NotificationService.error("Error in the server")
+      }
+    }
+
+  }
 
   const logout = (): void => {
     localStorage.removeItem(localStorageEnum.token);
@@ -90,5 +105,6 @@ export const useAuthStore = (): _useAuthStore => {
     login,
     logout,
     checkCredentials,
+    resetPassword
   };
 };

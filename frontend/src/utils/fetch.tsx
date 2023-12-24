@@ -55,6 +55,7 @@ export async function apiFetch<T>(
     throw new Error(error.message);
   }
 
+
   const data = (await response.json()) as T;
 
   return data;
